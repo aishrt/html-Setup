@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic API Utility</title>
+
+
+
+    <!-- <script>
+    // A dynamic CRUD utility that can be reused across HTML pages.
+    const APIUtil = {
+      // Base fetch method
+      request: async (url, method, data = null, headers = {}) => {
+        try {
+          const options = {
+            method,
+            headers: {
+              'Content-Type': 'application/json',
+              ...headers,
+            },
+          };
+
+          if (data) {
+            options.body = JSON.stringify(data);
+          }
+
+          const response = await fetch(url, options);
+
+          let result;
+          const contentType = response.headers.get('Content-Type');
+          if (contentType && contentType.includes('application/json')) {
+            result = await response.json();
+          } else {
+            result = await response.text();
+          }
+
+          if (!response.ok) {
+            throw new Error(result.message || result || 'Something went wrong');
+          }
+
+          return result;
+        } catch (error) {
+          console.error('API Request Error:', error);
+          throw error;
+        }
+      },
+
+      // CRUD Methods
+      get: async (url, headers = {}) => APIUtil.request(url, 'GET', null, headers),
+      post: async (url, data, headers = {}) => APIUtil.request(url, 'POST', data, headers),
+      put: async (url, data, headers = {}) => APIUtil.request(url, 'PUT', data, headers),
+      patch: async (url, data, headers = {}) => APIUtil.request(url, 'PATCH', data, headers),
+      delete: async (url, headers = {}) => APIUtil.request(url, 'DELETE', null, headers),
+    };
+
+    // Example API Usage:
+    document.addEventListener("DOMContentLoaded", () => {
+      // GET request
+      APIUtil.get('https://jsonplaceholder.typicode.com/posts')
+        .then(data => console.log('GET Response:', data))
+        .catch(error => console.error('GET Error:', error));
+
+      // POST request
+      APIUtil.post('https://jsonplaceholder.typicode.com/posts', {
+        title: 'Test Post',
+        body: 'This is a test',
+      })
+        .then(data => console.log('POST Response:', data))
+        .catch(error => console.error('POST Error:', error));
+
+      // PUT request
+      APIUtil.put('https://jsonplaceholder.typicode.com/posts/1', {
+        title: 'Updated Title',
+        body: 'Updated content',
+      })
+        .then(data => console.log('PUT Response:', data))
+        .catch(error => console.error('PUT Error:', error));
+
+      // DELETE request
+      APIUtil.delete('https://jsonplaceholder.typicode.com/posts/1')
+        .then(data => console.log('DELETE Response:', data))
+        .catch(error => console.error('DELETE Error:', error));
+    });
+  </script> -->
+</head>
+
+<body>
+    <h1>Dynamic API Utility Example</h1>
+    <p>Open the browser console to see the results of the API calls.</p>
+    <div id="data-container" class="data-container"></div>
+    <!-- <script type="module">
+        // Import the APIUtil module
+        import { APIUtil } from './js/apiUtil.js';
+        APIUtil.get('https://jsonplaceholder.typicode.com/posts')
+            .then(data => console.log('GET Response:', data))
+            .catch(error => console.error('GET Error:', error));
+    </script> -->
+    <script type="module">
+        import { APIUtil } from './js/apiUtil.js';
+
+        // Reference to the data container
+        const dataContainer = document.getElementById('data-container');
+
+        // Fetch data and display it on the page
+        APIUtil.get('https://jsonplaceholder.typicode.com/posts')
+            .then(posts => {
+                // Clear the container
+                dataContainer.innerHTML = '';
+
+                // Render each post
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'post';
+                    postElement.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p>${post.body}</p>
+                    `;
+                    dataContainer.appendChild(postElement);
+                });
+            })
+            .catch(error => {
+                console.error('GET Error:', error);
+                dataContainer.innerHTML = `<p style="color: red;">Failed to load data: ${error.message}</p>`;
+            });
+    </script>
+</body>
+
+</html>
